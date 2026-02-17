@@ -6,8 +6,12 @@
   <title>Laporan Kegiatan Ramadhan - MI MIFTAKHUL ATHFAL ARROHMAN</title>
   <link rel="shortcut icon" href="logo.png" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <!-- html2pdf bundle -->
+  <!-- html2pdf bundle (versi stabil) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- html2canvas sebagai fallback -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- jspdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     .islamic-pattern {
@@ -130,11 +134,11 @@
     }
     /* jarak konten agar tidak ketutupan header */
     .main-content {
-      margin-top: 170px;
+      margin-top: 180px;
     }
     @media (min-width: 768px) {
       .main-content {
-        margin-top: 150px;
+        margin-top: 160px;
       }
     }
     /* header lebih tinggi sedikit agar elemen dekoratif muat */
@@ -154,10 +158,11 @@
       justify-content: center;
       align-items: center;
       padding: 8px;
+      margin: 10px 0;
     }
     .tadarus-image-container img {
       max-width: 100%;
-      max-height: 300px;
+      max-height: 250px;
       width: auto;
       height: auto;
       object-fit: contain;
@@ -169,10 +174,50 @@
     #preview-content {
       width: 100%;
       overflow-x: auto;
+      background: white;
     }
-    #preview-content .max-w-a4 {
+    #preview-content .report-container {
       max-width: 210mm;
       margin: 0 auto;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    /* Style untuk preview */
+    .preview-header {
+      background: linear-gradient(135deg, #065f46, #047857);
+      color: white;
+    }
+    /* Signature container */
+    .signature-box {
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9fafb;
+    }
+    .signature-box img {
+      max-width: 100%;
+      max-height: 80px;
+      object-fit: contain;
+    }
+    /* Loading spinner */
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #10b981;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -204,7 +249,6 @@
           <div class="flex items-center gap-3">
             <div class="bg-gradient-to-br from-amber-500 to-yellow-600 p-3 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300 crescent-glow">
               <div class="text-white font-black text-xl md:text-2xl" style="font-family: 'Amiri', serif;">
-                <!-- <span class="text-3xl">🌙</span> WASAN<br> -->
                 <span class="text-amber-200">MI MIFTAKHUL ATHFAL</span><br>
                 <span class="text-lg">ARROHMAN</span>
               </div>
@@ -264,9 +308,6 @@
         </div>
       </div>
     </header>
-    <br>
-    <br>
-    <br>
     <br>
     <br>
     <br>
@@ -337,54 +378,54 @@
         <div class="mb-5 pb-5 border-b border-gray-200">
           <label class="block text-emerald-700 font-semibold mb-3">🌅 Subuh</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
         <!-- Dzuhur -->
         <div class="mb-5 pb-5 border-b border-gray-200">
           <label class="block text-emerald-700 font-semibold mb-3">☀️ Dzuhur</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
         <!-- Ashar -->
         <div class="mb-5 pb-5 border-b border-gray-200">
           <label class="block text-emerald-700 font-semibold mb-3">🌤️ Ashar</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
         <!-- Maghrib -->
         <div class="mb-5 pb-5 border-b border-gray-200">
           <label class="block text-emerald-700 font-semibold mb-3">🌅 Maghrib</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
         <!-- Isya -->
         <div class="mb-5 pb-5 border-b border-gray-200">
           <label class="block text-emerald-700 font-semibold mb-3">🌙 Isya</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
         <!-- Tarawih -->
         <div class="mb-0">
           <label class="block text-purple-700 font-semibold mb-3">🕌 Tarawih</label>
           <div class="flex gap-3 flex-wrap">
-            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SJ">🟢 SJ (Jamaah)</button>
-            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SS">🟡 SS (Sendiri)</button>
-            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="TS">🔴 TS (Tidak)</button>
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SJ">🟢 SJ (Sholat Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SS">🟡 SS (Sholat Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="TS">🔴 TS (Tidak Sholat)</button>
           </div>
         </div>
       </section>
@@ -398,7 +439,7 @@
         <div class="mb-8 pb-8 border-b border-gray-200">
           <p class="text-emerald-700 font-semibold mb-4">🌅 Apakah kamu makan Sahur hari ini?</p>
           <div class="flex gap-4">
-            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="sahur" data-value="true">✅ Ya</button>
+            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="sahur" data-value="true">✅ Iya</button>
             <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="sahur" data-value="false">❌ Tidak</button>
           </div>
         </div>
@@ -406,7 +447,7 @@
         <div class="mb-0">
           <p class="text-emerald-700 font-semibold mb-4">🌙 Apakah kamu Puasa hari ini?</p>
           <div class="flex gap-4">
-            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="puasa" data-value="true">✅ Ya</button>
+            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="puasa" data-value="true">✅ Iya</button>
             <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="puasa" data-value="false">❌ Tidak</button>
           </div>
         </div>
@@ -420,7 +461,7 @@
 
         <p class="text-emerald-700 font-semibold mb-4">Apakah hari ini kamu Tadarus Al-Quran?</p>
         <div class="flex gap-4 mb-8">
-          <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="tadarus_alquran" data-value="true">✅ Ya</button>
+          <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="tadarus_alquran" data-value="true">✅ Iya</button>
           <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="tadarus_alquran" data-value="false">❌ Tidak</button>
         </div>
 
@@ -532,69 +573,52 @@
         </div>
       </section>
 
-      <!-- Submit Button -->
+      <!-- Action Buttons -->
       <div class="flex gap-3 mb-8 fade-in flex-wrap" style="animation-delay: 0.6s;">
-        <!-- <button type="button" id="btn-submit"
-          class="flex-1 min-w-max py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-xl hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-          <span>💾</span> Simpan Laporan
-        </button> -->
         <button type="button" id="btn-preview"
           class="flex-1 min-w-max py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
           <span>👁️</span> Preview
         </button>
         <button type="button" id="btn-download"
           class="flex-1 min-w-max py-4 bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold rounded-xl hover:from-purple-700 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-          <span>⬇️</span> Unduh
+          <span>⬇️</span> Unduh PDF
         </button>
       </div>
 
     </main>
 
-    <!-- Delete Modal (optional) -->
-    <div id="delete-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">Hapus Laporan?</h3>
-        <p class="text-gray-600 mb-4">Laporan ini akan dihapus secara permanen.</p>
-        <div class="flex gap-3">
-          <button id="btn-cancel-delete" class="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold">Batal</button>
-          <button id="btn-confirm-delete" class="flex-1 py-2 px-4 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-semibold">Hapus</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Preview Modal -->
     <div id="preview-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-auto">
       <div class="bg-white rounded-2xl w-full max-w-4xl shadow-2xl max-h-screen overflow-auto">
-        <div class="sticky top-0 bg-emerald-600 text-white p-4 flex justify-between items-center">
-          <h3 class="text-xl font-bold">📋 Preview Laporan</h3>
-          <button id="btn-close-preview" class="text-2xl leading-none hover:opacity-70">✕</button>
+        <div class="sticky top-0 preview-header text-white p-4 flex justify-between items-center rounded-t-2xl">
+          <h3 class="text-xl font-bold flex items-center gap-2">
+            <span>📋</span> Preview Laporan Ramadhan
+          </h3>
+          <button id="btn-close-preview" class="text-2xl leading-none hover:opacity-70 bg-white/20 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
         </div>
-        <div id="preview-content" class="p-8"></div>
+        <div id="preview-content" class="p-6"></div>
         <div class="sticky bottom-0 bg-gray-100 p-4 flex gap-3 justify-end border-t">
-          <button id="btn-close-preview-2" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-semibold">Tutup</button>
-          <button id="btn-download-from-preview" class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold flex items-center gap-2"><span>⬇️</span> Unduh PDF</button>
-          <button id="btn-send-to-teacher" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2"><span>📧</span> Kirim ke Guru</button>
+          <button id="btn-close-preview-2" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-semibold transition-all">
+            Tutup
+          </button>
+          <button id="btn-download-from-preview" class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold flex items-center gap-2 transition-all">
+            <span>⬇️</span> Unduh PDF
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Send to Teacher Modal -->
-    <div id="send-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">📧 Kirim ke Guru</h3>
-        <input type="email" id="input-guru-email" placeholder="Email guru"
-          class="w-full px-4 py-2 mb-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none">
-        <input type="text" id="input-guru-name" placeholder="Nama guru"
-          class="w-full px-4 py-2 mb-4 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none">
-        <div class="flex gap-3">
-          <button id="btn-cancel-send" class="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold">Batal</button>
-          <button id="btn-send-confirm" class="flex-1 py-2 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors font-semibold">Kirim</button>
-        </div>
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
+        <div class="spinner mx-auto mb-4"></div>
+        <p id="loading-message" class="text-emerald-800 font-semibold">Sedang memproses PDF...</p>
+        <p class="text-gray-500 text-sm mt-2">Mohon tunggu sebentar</p>
       </div>
     </div>
 
     <!-- Toast Message -->
-    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
       <span id="toast-message">Tersimpan!</span>
     </div>
 
@@ -608,9 +632,7 @@
     };
 
     let config = { ...defaultConfig };
-    let allRecords = [];
     let currentRecordData = null;
-    let recordCount = 0;
 
     // Canvas Drawing Setup
     let canvases = {};
@@ -647,48 +669,44 @@
       ctx.lineJoin = 'round';
       ctx.lineWidth = 2;
       ctx.strokeStyle = '#333';
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       let isDrawing = false;
 
-      canvas.addEventListener('mousedown', (e) => {
+      const startDrawing = (e) => {
         e.preventDefault();
         isDrawing = true;
         const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
         ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-      });
+        ctx.moveTo(x, y);
+      };
 
-      canvas.addEventListener('mousemove', (e) => {
+      const draw = (e) => {
         e.preventDefault();
         if (!isDrawing) return;
         const rect = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        ctx.lineTo(x, y);
         ctx.stroke();
-      });
+      };
 
-      canvas.addEventListener('mouseup', () => { isDrawing = false; });
-      canvas.addEventListener('mouseout', () => { isDrawing = false; });
+      const stopDrawing = () => {
+        isDrawing = false;
+      };
+
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
 
       // Touch support
-      canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        isDrawing = true;
-        const rect = canvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        ctx.beginPath();
-        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-      });
-
-      canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-        ctx.stroke();
-      });
-
-      canvas.addEventListener('touchend', () => { isDrawing = false; });
+      canvas.addEventListener('touchstart', startDrawing);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', stopDrawing);
 
       canvases[storageKey] = { canvas, ctx };
     }
@@ -701,13 +719,23 @@
     }
 
     // Show Toast
-    function showToast(message) {
+    function showToast(message, isError = false) {
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toast-message');
       if (toast && toastMessage) {
         toastMessage.textContent = message;
         toast.classList.remove('translate-y-20', 'opacity-0');
         toast.classList.add('translate-y-0', 'opacity-100');
+        
+        // Change color for error
+        if (isError) {
+          toast.classList.remove('bg-emerald-600');
+          toast.classList.add('bg-red-600');
+        } else {
+          toast.classList.remove('bg-red-600');
+          toast.classList.add('bg-emerald-600');
+        }
+        
         setTimeout(() => {
           toast.classList.add('translate-y-20', 'opacity-0');
           toast.classList.remove('translate-y-0', 'opacity-100');
@@ -715,8 +743,26 @@
       }
     }
 
+    // Show/Hide Loading
+    function showLoading(message = 'Sedang memproses PDF...') {
+      const modal = document.getElementById('loading-modal');
+      const msg = document.getElementById('loading-message');
+      if (modal && msg) {
+        msg.textContent = message;
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function hideLoading() {
+      const modal = document.getElementById('loading-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
     // Format Date
     function formatDate(dateStr) {
+      if (!dateStr) return '-';
       const date = new Date(dateStr);
       return date.toLocaleDateString('id-ID', { 
         weekday: 'long', 
@@ -728,155 +774,159 @@
 
     // Get Sholat Status Icon
     function getSholatIcon(value) {
-      if (value === 'SJ') return '🟢 SJ';
-      if (value === 'SS') return '🟡 SS';
-      if (value === 'TS') return '🔴 TS';
+      if (value === 'SJ') return '🟢 SJ (Jamaah)';
+      if (value === 'SS') return '🟡 SS (Sendiri)';
+      if (value === 'TS') return '🔴 TS (Tidak)';
       return '⚪ -';
     }
 
     // Validate Form
     function validateForm() {
-      const nama = document.getElementById('input-nama').value.trim();
-      const tanggal = document.getElementById('input-tanggal').value;
-      const kelas = document.getElementById('input-kelas').value.trim();
-      const ramadhan = document.getElementById('input-ramadhan').value;
+      const nama = document.getElementById('input-nama')?.value.trim();
+      const tanggal = document.getElementById('input-tanggal')?.value;
+      const kelas = document.getElementById('input-kelas')?.value;
+      const ramadhan = document.getElementById('input-ramadhan')?.value;
 
       if (!nama || !tanggal || !kelas || !ramadhan) {
-        showToast('❌ Isi semua data siswa terlebih dahulu!');
+        showToast('❌ Isi semua data siswa terlebih dahulu!', true);
         return false;
       }
 
       const allSholatFilled = Object.values(selectedSholat).every(v => v !== null);
       if (!allSholatFilled) {
-        showToast('❌ Pilih status sholat untuk semua waktu!');
+        showToast('❌ Pilih status sholat untuk semua waktu!', true);
         return false;
       }
 
       const allYNFilled = Object.values(selectedYN).every(v => v !== null);
       if (!allYNFilled) {
-        showToast('❌ Pilih jawaban untuk sahur, puasa, dan tadarus!');
+        showToast('❌ Pilih jawaban untuk sahur, puasa, dan tadarus!', true);
         return false;
       }
 
       if (selectedYN.tadarus_alquran === 'true') {
-        const namaSurat = document.getElementById('input-nama-surat').value.trim();
-        const dariAyat = document.getElementById('input-dari-ayat').value;
-        const sampaiAyat = document.getElementById('input-sampai-ayat').value;
+        const namaSurat = document.getElementById('input-nama-surat')?.value.trim();
+        const dariAyat = document.getElementById('input-dari-ayat')?.value;
+        const sampaiAyat = document.getElementById('input-sampai-ayat')?.value;
 
         if (!namaSurat || !dariAyat || !sampaiAyat) {
-          showToast('❌ Isi detail tadarus (surat dan ayat)!');
+          showToast('❌ Isi detail tadarus (surat dan ayat)!', true);
           return false;
         }
 
         if (!currentFotoTadarus) {
-          showToast('❌ Unggah foto tadarus terlebih dahulu!');
+          showToast('❌ Unggah foto tadarus terlebih dahulu!', true);
           return false;
         }
       }
 
       if (!signatures.orang_tua || !signatures.murid) {
-        showToast('❌ Tanda tangan orang tua dan murid harus ada!');
+        showToast('❌ Tanda tangan orang tua dan murid harus ada!', true);
         return false;
       }
 
       return true;
     }
 
-    // Generate Report HTML (dengan perbaikan untuk gambar tadarus)
+    // Generate Report HTML
     function generateReportHTML(record) {
-      // Fungsi untuk menampilkan gambar tadarus dengan container yang tepat
       const tadarusImageHTML = record.foto_tadarus ? 
-        `<div class="tadarus-image-container" style="max-width: 100%; overflow: hidden; border-radius: 12px; border: 2px solid #10b981; background-color: #f9fafb; display: flex; justify-content: center; align-items: center; padding: 8px; margin: 10px 0;">
-          <img src="${record.foto_tadarus}" alt="Foto Tadarus" style="max-width: 100%; max-height: 300px; width: auto; height: auto; object-fit: contain; border-radius: 8px; display: block; margin: 0 auto;">
+        `<div class="tadarus-image-container">
+          <img src="${record.foto_tadarus}" alt="Foto Tadarus">
         </div>` : '';
 
       return `
-        <div class="bg-white p-8" style="font-family: 'Quicksand', sans-serif; max-width: 210mm; margin: 0 auto;">
-          <!-- Header dengan logo teks MI MIFTAKHUL ATHFAL ARROHMAN -->
-          <div class="text-center mb-8 border-b-4 pb-6">
-            <div class="flex justify-center mb-4">
-              <div class="bg-gradient-to-br from-emerald-700 to-emerald-500 p-4 rounded-2xl shadow-lg">
-                <div class="text-white font-black text-4xl" style="font-family: 'Amiri', serif;">
-                  MI<br>MIFTAKHUL ATHFAL<br><span class="text-2xl text-amber-300">ARROHMAN</span>
+        <div class="report-container" style="font-family: 'Quicksand', sans-serif;">
+          <!-- Header -->
+          <div class="text-center mb-6 border-b-4 border-emerald-600 pb-4">
+            <div class="flex justify-center mb-3">
+              <div class="bg-gradient-to-br from-emerald-700 to-emerald-500 p-3 rounded-xl shadow-lg">
+                <div class="text-white font-black text-2xl md:text-3xl" style="font-family: 'Amiri', serif;">
+                  MI<br>MIFTAKHUL ATHFAL<br><span class="text-lg md:text-xl text-amber-300">ARROHMAN</span>
                 </div>
               </div>
             </div>
-            <h1 class="text-3xl font-bold text-emerald-800 mb-1">MI MIFTAKHUL ATHFAL</h1>
-            <p class="text-base text-gray-700 font-semibold mb-2">Jl. Perkutut No 37, Tembok Kidul, Kec. Adiwerna</p>
-            <div class="w-16 h-1 bg-amber-400 mx-auto mb-4"></div>
-            <h2 class="text-2xl font-bold text-emerald-800">LAPORAN KEGIATAN RAMADHAN 1447H./2026M.</h2>
-            <p class="text-gray-600 mt-2">Siswa Sekolah / Pesantren</p>
+            <h1 class="text-xl font-bold text-emerald-800">MI MIFTAKHUL ATHFAL</h1>
+            <p class="text-xs text-gray-600">Jl. Perkutut No 37, Tembok Kidul, Kec. Adiwerna</p>
+            <div class="w-12 h-0.5 bg-amber-400 mx-auto my-2"></div>
+            <h2 class="text-lg font-bold text-emerald-800">LAPORAN KEGIATAN RAMADHAN 1447H/2026M</h2>
           </div>
 
-          <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
-            <div><strong>Nama Siswa:</strong> ${record.nama_lengkap}</div>
+          <!-- Data Siswa -->
+          <div class="grid grid-cols-2 gap-3 mb-4 text-xs bg-emerald-50 p-3 rounded-lg">
+            <div><strong>Nama:</strong> ${record.nama_lengkap}</div>
             <div><strong>Tanggal:</strong> ${formatDate(record.tanggal)}</div>
             <div><strong>Kelas:</strong> ${record.kelas}</div>
-            <div><strong>Ramadhan Ke:</strong> ${record.ramadhan_ke}</div>
+            <div><strong>Ramadhan ke-:</strong> ${record.ramadhan_ke}</div>
           </div>
 
-          <div class="mb-8">
-            <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🕌 LAPORAN SHOLAT</h2>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <div class="p-3 bg-gray-50 rounded"><strong>Subuh:</strong> ${getSholatIcon(record.subuh)}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Dzuhur:</strong> ${getSholatIcon(record.dzuhur)}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Ashar:</strong> ${getSholatIcon(record.ashar)}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Maghrib:</strong> ${getSholatIcon(record.maghrib)}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Isya:</strong> ${getSholatIcon(record.isya)}</div>
-              <div class="p-3 bg-purple-50 rounded"><strong>Tarawih:</strong> ${getSholatIcon(record.tarawih)}</div>
+          <!-- Sholat -->
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🕌 LAPORAN SHOLAT</h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2 bg-gray-50 rounded"><strong>Subuh:</strong> ${getSholatIcon(record.subuh)}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Dzuhur:</strong> ${getSholatIcon(record.dzuhur)}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Ashar:</strong> ${getSholatIcon(record.ashar)}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Maghrib:</strong> ${getSholatIcon(record.maghrib)}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Isya:</strong> ${getSholatIcon(record.isya)}</div>
+              <div class="p-2 bg-purple-50 rounded"><strong>Tarawih:</strong> ${getSholatIcon(record.tarawih)}</div>
             </div>
           </div>
 
-          <div class="mb-8">
-            <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🍽️ PUASA & TADARUS</h2>
-            <div class="grid grid-cols-3 gap-4 text-sm">
-              <div class="p-3 bg-gray-50 rounded"><strong>Makan Sahur:</strong> ${record.makan_sahur ? '✅ Ya' : '❌ Tidak'}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Puasa:</strong> ${record.puasa ? '✅ Ya' : '❌ Tidak'}</div>
-              <div class="p-3 bg-gray-50 rounded"><strong>Tadarus:</strong> ${record.tadarus_alquran ? '✅ Ya' : '❌ Tidak'}</div>
+          <!-- Sahur & Puasa -->
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🍽️ SAHUR & PUASA</h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2 bg-gray-50 rounded"><strong>Makan Sahur:</strong> ${record.makan_sahur ? '✅ Ya' : '❌ Tidak'}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Puasa:</strong> ${record.puasa ? '✅ Ya' : '❌ Tidak'}</div>
             </div>
           </div>
 
-          ${record.nama_surat_tadarus ? `
-            <div class="mb-8">
-              <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">📖 DETAIL TADARUS AL-QURAN</h2>
-              <div class="bg-emerald-50 p-4 rounded-lg text-sm">
-                <div class="mb-2"><strong>Nama Surat:</strong> ${record.nama_surat_tadarus}</div>
-                <div class="mb-4"><strong>Ayat:</strong> Dari ayat ${record.dari_ayat_tadarus} sampai ayat ${record.sampai_ayat_tadarus}</div>
-                ${record.foto_tadarus ? tadarusImageHTML : ''}
+          <!-- Tadarus -->
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">📖 TADARUS AL-QURAN</h3>
+            <div class="text-xs mb-2"><strong>Tadarus:</strong> ${record.tadarus_alquran ? '✅ Ya' : '❌ Tidak'}</div>
+            ${record.tadarus_alquran ? `
+              <div class="bg-emerald-50 p-2 rounded-lg text-xs">
+                <div><strong>Surat:</strong> ${record.nama_surat_tadarus || '-'}</div>
+                <div><strong>Ayat:</strong> ${record.dari_ayat_tadarus || '-'} - ${record.sampai_ayat_tadarus || '-'}</div>
+                ${tadarusImageHTML}
               </div>
-            </div>
-          ` : ''}
+            ` : ''}
+          </div>
 
+          <!-- Kuliah -->
           ${record.nama_penceramah || record.tempat_ceramah ? `
-            <div class="mb-8">
-              <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🎤 KULIAH SUBUH & ASHAR</h2>
-              ${record.nama_penceramah ? `<div class="mb-2 text-sm"><strong>Nama Penceramah:</strong> ${record.nama_penceramah}</div>` : ''}
-              ${record.tempat_ceramah ? `<div class="mb-2 text-sm"><strong>Tempat Ceramah:</strong> ${record.tempat_ceramah}</div>` : ''}
-              ${record.isi_ringkasan ? `<div class="mb-2 text-sm"><strong>Ringkasan Ceramah:</strong></div><div class="p-3 bg-gray-50 rounded text-sm">${record.isi_ringkasan}</div>` : ''}
+            <div class="mb-4">
+              <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🎤 KULIAH SUBUH & ASHAR</h3>
+              <div class="bg-gray-50 p-2 rounded-lg text-xs">
+                ${record.nama_penceramah ? `<div><strong>Penceramah:</strong> ${record.nama_penceramah}</div>` : ''}
+                ${record.tempat_ceramah ? `<div><strong>Tempat:</strong> ${record.tempat_ceramah}</div>` : ''}
+                ${record.isi_ringkasan ? `<div class="mt-1"><strong>Ringkasan:</strong><br>${record.isi_ringkasan}</div>` : ''}
+              </div>
             </div>
           ` : ''}
 
-          <div class="mt-12">
-            <h2 class="text-lg font-bold text-emerald-800 mb-6 border-b-2 pb-2">✍️ TANDA TANGAN</h2>
-            <div class="grid grid-cols-2 gap-8">
-              <div>
-                <div class="mb-4 border-2 border-gray-300 bg-gray-50 p-3 h-32 flex items-center justify-center">
-                  ${record.ttd_orang_tua ? `<img src="${record.ttd_orang_tua}" alt="TTD Orang Tua" style="max-width: 100%; max-height: 120px; object-fit: contain;">` : '<span class="text-gray-400">Tanda Tangan</span>'}
+          <!-- Tanda Tangan -->
+          <div class="mt-6">
+            <h3 class="text-sm font-bold text-emerald-800 mb-3 border-b pb-1">✍️ TANDA TANGAN</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-center">
+                <div class="signature-box mb-1">
+                  ${record.ttd_orang_tua ? `<img src="${record.ttd_orang_tua}" alt="TTD Orang Tua">` : '<span class="text-gray-400 text-xs">-</span>'}
                 </div>
-                <div class="text-center text-sm">
+                <div class="text-xs">
                   <strong>Orang Tua</strong><br>
-                  <div class="mt-4 text-gray-600"></div>
-                  <div class="text-xs text-gray-500 mt-2">${formatDate(record.tanggal)}</div>
+                  <span class="text-gray-500">${formatDate(record.tanggal)}</span>
                 </div>
               </div>
-              <div>
-                <div class="mb-4 border-2 border-gray-300 bg-gray-50 p-3 h-32 flex items-center justify-center">
-                  ${record.ttd_murid ? `<img src="${record.ttd_murid}" alt="TTD Murid" style="max-width: 100%; max-height: 120px; object-fit: contain;">` : '<span class="text-gray-400">Tanda Tangan</span>'}
+              <div class="text-center">
+                <div class="signature-box mb-1">
+                  ${record.ttd_murid ? `<img src="${record.ttd_murid}" alt="TTD Murid">` : '<span class="text-gray-400 text-xs">-</span>'}
                 </div>
-                <div class="text-center text-sm">
+                <div class="text-xs">
                   <strong>Murid</strong><br>
-                  <div class="mt-4 text-gray-600"></div>
-                  <div class="text-xs text-gray-500 mt-2">${record.nama_lengkap}</div>
+                  <span class="text-gray-500">${record.nama_lengkap}</span>
                 </div>
               </div>
             </div>
@@ -885,16 +935,13 @@
       `;
     }
 
-    // Show Preview
-    function showPreview() {
-      if (!validateForm()) return;
-
-      const previewContent = document.getElementById('preview-content');
-      currentRecordData = {
-        nama_lengkap: document.getElementById('input-nama').value.trim(),
-        tanggal: document.getElementById('input-tanggal').value,
-        kelas: document.getElementById('input-kelas').value.trim(),
-        ramadhan_ke: document.getElementById('input-ramadhan').value,
+    // Collect Form Data
+    function collectFormData() {
+      return {
+        nama_lengkap: document.getElementById('input-nama')?.value.trim() || '',
+        tanggal: document.getElementById('input-tanggal')?.value || '',
+        kelas: document.getElementById('input-kelas')?.value || '',
+        ramadhan_ke: document.getElementById('input-ramadhan')?.value || '',
         subuh: selectedSholat.subuh,
         dzuhur: selectedSholat.dzuhur,
         ashar: selectedSholat.ashar,
@@ -904,67 +951,81 @@
         makan_sahur: selectedYN.sahur === 'true',
         puasa: selectedYN.puasa === 'true',
         tadarus_alquran: selectedYN.tadarus_alquran === 'true',
-        nama_surat_tadarus: document.getElementById('input-nama-surat').value.trim(),
-        dari_ayat_tadarus: document.getElementById('input-dari-ayat').value,
-        sampai_ayat_tadarus: document.getElementById('input-sampai-ayat').value,
+        nama_surat_tadarus: document.getElementById('input-nama-surat')?.value.trim() || '',
+        dari_ayat_tadarus: document.getElementById('input-dari-ayat')?.value || '',
+        sampai_ayat_tadarus: document.getElementById('input-sampai-ayat')?.value || '',
         foto_tadarus: currentFotoTadarus,
-        nama_penceramah: document.getElementById('input-penceramah').value.trim(),
-        tempat_ceramah: document.getElementById('input-tempat').value.trim(),
-        isi_ringkasan: document.getElementById('input-ringkasan').value.trim(),
+        nama_penceramah: document.getElementById('input-penceramah')?.value.trim() || '',
+        tempat_ceramah: document.getElementById('input-tempat')?.value.trim() || '',
+        isi_ringkasan: document.getElementById('input-ringkasan')?.value.trim() || '',
         ttd_orang_tua: signatures.orang_tua,
         ttd_murid: signatures.murid
       };
+    }
 
+    // Show Preview
+    function showPreview() {
+      if (!validateForm()) return;
+
+      const previewContent = document.getElementById('preview-content');
+      currentRecordData = collectFormData();
       previewContent.innerHTML = generateReportHTML(currentRecordData);
       document.getElementById('preview-modal').classList.remove('hidden');
     }
 
-    // Download PDF (simpan ke galeri) - dengan opsi yang lebih baik untuk gambar
+    // Download PDF
     async function downloadPDF() {
       if (!currentRecordData) {
-        showToast('❌ Buat preview terlebih dahulu!');
-        return;
+        // Jika belum preview, coba validasi dulu
+        if (!validateForm()) return;
+        currentRecordData = collectFormData();
       }
 
       const element = document.getElementById('preview-content');
-      
-      // Opsi yang dioptimalkan untuk gambar agar tidak terpotong
-      const opt = {
-        margin: [15, 15, 15, 15], // margin atas, kanan, bawah, kiri (mm)
-        filename: `Laporan_Ramadhan_${currentRecordData.nama_lengkap}_${currentRecordData.tanggal}.pdf`,
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { 
-          scale: 2,
-          logging: true,
-          allowTaint: false,
-          useCORS: true,
-          letterRendering: true,
-          scrollY: 0,
-          windowWidth: document.getElementById('preview-content').scrollWidth
-        },
-        jsPDF: { 
-          orientation: 'portrait', 
-          unit: 'mm', 
-          format: 'a4',
-          compress: true
-        },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
+      if (!element) return;
 
-      // Tampilkan loading toast
-      showToast('⏳ Sedang memproses PDF...');
+      // Set content
+      element.innerHTML = generateReportHTML(currentRecordData);
+      
+      // Tampilkan loading
+      showLoading('Sedang membuat PDF...');
       
       try {
+        // Opsi PDF
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: `Laporan_Ramadhan_${currentRecordData.nama_lengkap}_${currentRecordData.tanggal}.pdf`,
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { 
+            scale: 2,
+            logging: false,
+            useCORS: true,
+            allowTaint: false,
+            letterRendering: true,
+            backgroundColor: '#ffffff'
+          },
+          jsPDF: { 
+            orientation: 'portrait', 
+            unit: 'mm', 
+            format: 'a4',
+            compress: true
+          }
+        };
+
+        // Generate PDF
         await html2pdf().set(opt).from(element).save();
-        showToast('✅ PDF berhasil diunduh! (simpan ke galeri)');
+        
+        hideLoading();
+        showToast('✅ PDF berhasil diunduh!');
       } catch (error) {
         console.error('PDF Error:', error);
-        showToast('❌ Gagal mengunduh PDF. Coba lagi.');
+        hideLoading();
+        showToast('❌ Gagal mengunduh PDF. Coba lagi.', true);
       }
     }
 
-    // Save Canvas
-    function saveCanvasSignature(canvasId, storageKey) {
+    // Save Canvas Signature
+    function saveCanvasSignature(storageKey) {
       const canvas = canvases[storageKey];
       if (canvas) {
         signatures[storageKey] = canvas.canvas.toDataURL('image/png');
@@ -977,47 +1038,38 @@
       const canvas = canvases[storageKey];
       if (canvas) {
         canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+        canvas.ctx.fillStyle = '#fff';
+        canvas.ctx.fillRect(0, 0, canvas.canvas.width, canvas.canvas.height);
         signatures[storageKey] = null;
+        showToast('🗑️ Tanda tangan dihapus');
       }
     }
 
     // Handle Tadarus Toggle
     function handleTadarusToggle(value) {
       const details = document.getElementById('tadarus-details');
-      if (value === 'true') {
-        details.classList.remove('hidden');
-      } else {
-        details.classList.add('hidden');
+      if (details) {
+        if (value === 'true') {
+          details.classList.remove('hidden');
+        } else {
+          details.classList.add('hidden');
+        }
       }
-    }
-
-    // Handle Submit (simulasi)
-    async function handleSubmit() {
-      if (!validateForm()) return;
-      // Demo mode
-      showToast('✅ (Demo) Laporan siap disimpan');
-    }
-
-    // Send to Teacher (simulasi)
-    async function sendToTeacher() {
-      if (!currentRecordData) return;
-      const guruEmail = document.getElementById('input-guru-email').value.trim();
-      const guruName = document.getElementById('input-guru-name').value.trim();
-      if (!guruEmail || !guruName) {
-        showToast('❌ Isi email dan nama guru!');
-        return;
-      }
-      showToast(`✅ Laporan dikirim ke ${guruName} (${guruEmail}) - simulasi`);
-      document.getElementById('send-modal').classList.add('hidden');
     }
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+      // Set default date
       const dateInput = document.getElementById('input-tanggal');
       if (dateInput) {
-        dateInput.value = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        dateInput.value = `${year}-${month}-${day}`;
       }
 
+      // Initialize canvases
       initCanvas('canvas-orang-tua', 'orang_tua');
       initCanvas('canvas-murid', 'murid');
 
@@ -1061,66 +1113,51 @@
       const uploadArea = document.getElementById('upload-area');
       const fileInput = document.getElementById('input-foto-tadarus');
 
-      uploadArea.addEventListener('click', () => fileInput.click());
+      if (uploadArea && fileInput) {
+        uploadArea.addEventListener('click', () => fileInput.click());
 
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            currentFotoTadarus = event.target.result;
-            document.getElementById('preview-img').src = currentFotoTadarus;
-            document.getElementById('upload-preview').classList.add('hidden');
-            document.getElementById('foto-preview').classList.remove('hidden');
-            showToast('✅ Foto berhasil diunggah!');
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              currentFotoTadarus = event.target.result;
+              const previewImg = document.getElementById('preview-img');
+              if (previewImg) {
+                previewImg.src = currentFotoTadarus;
+              }
+              document.getElementById('upload-preview')?.classList.add('hidden');
+              document.getElementById('foto-preview')?.classList.remove('hidden');
+              showToast('✅ Foto berhasil diunggah!');
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
 
-      document.getElementById('btn-change-foto').addEventListener('click', () => {
-        fileInput.click();
+      document.getElementById('btn-change-foto')?.addEventListener('click', () => {
+        fileInput?.click();
       });
 
       // Canvas buttons
-      document.getElementById('btn-clear-orang-tua').addEventListener('click', () => clearCanvas('orang_tua'));
-      document.getElementById('btn-save-orang-tua').addEventListener('click', () => saveCanvasSignature('canvas-orang-tua', 'orang_tua'));
-      document.getElementById('btn-clear-murid').addEventListener('click', () => clearCanvas('murid'));
-      document.getElementById('btn-save-murid').addEventListener('click', () => saveCanvasSignature('canvas-murid', 'murid'));
+      document.getElementById('btn-clear-orang-tua')?.addEventListener('click', () => clearCanvas('orang_tua'));
+      document.getElementById('btn-save-orang-tua')?.addEventListener('click', () => saveCanvasSignature('orang_tua'));
+      document.getElementById('btn-clear-murid')?.addEventListener('click', () => clearCanvas('murid'));
+      document.getElementById('btn-save-murid')?.addEventListener('click', () => saveCanvasSignature('murid'));
 
       // Main buttons
-      document.getElementById('btn-submit').addEventListener('click', handleSubmit);
-      document.getElementById('btn-preview').addEventListener('click', showPreview);
-      document.getElementById('btn-download').addEventListener('click', downloadPDF);
+      document.getElementById('btn-preview')?.addEventListener('click', showPreview);
+      document.getElementById('btn-download')?.addEventListener('click', downloadPDF);
 
       // Preview modal
       const closePreviewBtns = document.querySelectorAll('#btn-close-preview, #btn-close-preview-2');
       closePreviewBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          document.getElementById('preview-modal').classList.add('hidden');
+          document.getElementById('preview-modal')?.classList.add('hidden');
         });
       });
 
-      document.getElementById('btn-download-from-preview').addEventListener('click', downloadPDF);
-      document.getElementById('btn-send-to-teacher').addEventListener('click', () => {
-        document.getElementById('preview-modal').classList.add('hidden');
-        document.getElementById('send-modal').classList.remove('hidden');
-      });
-
-      // Send modal
-      document.getElementById('btn-cancel-send').addEventListener('click', () => {
-        document.getElementById('send-modal').classList.add('hidden');
-      });
-      document.getElementById('btn-send-confirm').addEventListener('click', sendToTeacher);
-
-      // Delete modal (dummy)
-      document.getElementById('btn-confirm-delete')?.addEventListener('click', () => {
-        document.getElementById('delete-modal').classList.add('hidden');
-        showToast('Laporan dihapus (demo)');
-      });
-      document.getElementById('btn-cancel-delete')?.addEventListener('click', () => {
-        document.getElementById('delete-modal').classList.add('hidden');
-      });
+      document.getElementById('btn-download-from-preview')?.addEventListener('click', downloadPDF);
 
       applyConfig();
     });
