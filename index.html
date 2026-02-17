@@ -774,9 +774,9 @@
 
     // Get Sholat Status Icon
     function getSholatIcon(value) {
-      if (value === 'SJ') return '🟢 SJ (Jamaah)';
-      if (value === 'SS') return '🟡 SS (Sendiri)';
-      if (value === 'TS') return '🔴 TS (Tidak)';
+      if (value === 'SJ') return '🟢 SJ (Sholat Jamaah)';
+      if (value === 'SS') return '🟡 SS (Sholat Sendiri)';
+      if (value === 'TS') return '🔴 TS (Tidak Sholat)';
       return '⚪ -';
     }
 
@@ -862,7 +862,7 @@
 
           <!-- Sholat -->
           <div class="mb-4">
-            <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🕌 LAPORAN SHOLAT</h3>
+            <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🕌 LAPORAN SHOLAT 5 WAKTU & TARAWIH</h3>
             <div class="grid grid-cols-2 gap-2 text-xs">
               <div class="p-2 bg-gray-50 rounded"><strong>Subuh:</strong> ${getSholatIcon(record.subuh)}</div>
               <div class="p-2 bg-gray-50 rounded"><strong>Dzuhur:</strong> ${getSholatIcon(record.dzuhur)}</div>
@@ -877,15 +877,15 @@
           <div class="mb-4">
             <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">🍽️ SAHUR & PUASA</h3>
             <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2 bg-gray-50 rounded"><strong>Makan Sahur:</strong> ${record.makan_sahur ? '✅ Ya' : '❌ Tidak'}</div>
-              <div class="p-2 bg-gray-50 rounded"><strong>Puasa:</strong> ${record.puasa ? '✅ Ya' : '❌ Tidak'}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Makan Sahur:</strong> ${record.makan_sahur ? '✅ Iya' : '❌ Tidak'}</div>
+              <div class="p-2 bg-gray-50 rounded"><strong>Puasa:</strong> ${record.puasa ? '✅ Iya' : '❌ Tidak'}</div>
             </div>
           </div>
 
           <!-- Tadarus -->
           <div class="mb-4">
             <h3 class="text-sm font-bold text-emerald-800 mb-2 border-b pb-1">📖 TADARUS AL-QURAN</h3>
-            <div class="text-xs mb-2"><strong>Tadarus:</strong> ${record.tadarus_alquran ? '✅ Ya' : '❌ Tidak'}</div>
+            <div class="text-xs mb-2"><strong>Tadarus:</strong> ${record.tadarus_alquran ? '✅ Iya' : '❌ Tidak'}</div>
             ${record.tadarus_alquran ? `
               <div class="bg-emerald-50 p-2 rounded-lg text-xs">
                 <div><strong>Surat:</strong> ${record.nama_surat_tadarus || '-'}</div>
