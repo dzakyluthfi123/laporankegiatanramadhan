@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Kegiatan Ramadhan - MI MIFTAKHUL ATHFAL ARROHMAN</title>
+  <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <!-- html2pdf bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .islamic-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23ffffff' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+    }
+    .btn-option {
+      transition: all 0.3s ease;
+      border-width: 2px;
+    }
+    .btn-option.active {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .btn-sj {
+      border-color: #10b981;
+      color: #10b981;
+    }
+    .btn-sj.active {
+      background-color: #10b981;
+      color: white;
+    }
+    .btn-ss {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+    .btn-ss.active {
+      background-color: #f59e0b;
+      color: white;
+    }
+    .btn-ts {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .btn-ts.active {
+      background-color: #ef4444;
+      color: white;
+    }
+    .btn-yn {
+      transition: all 0.3s ease;
+      border-width: 2px;
+    }
+    .btn-yn.active {
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .btn-ya {
+      border-color: #10b981;
+      color: #10b981;
+    }
+    .btn-ya.active {
+      background-color: #10b981;
+      color: white;
+    }
+    .btn-tidak {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .btn-tidak.active {
+      background-color: #ef4444;
+      color: white;
+    }
+    .canvas-container {
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      cursor: crosshair;
+      display: inline-block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes crescentGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3)); }
+      50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); }
+    }
+    @keyframes lanternSwing {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(3deg); }
+      75% { transform: rotate(-3deg); }
+    }
+    .moon-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    .crescent-glow {
+      animation: crescentGlow 4s ease-in-out infinite;
+    }
+    .lantern-swing {
+      animation: lanternSwing 5s ease-in-out infinite;
+    }
+    /* header elegan ramadhan tanpa bintang */
+    .ramadhan-header {
+      background: linear-gradient(135deg, #0a3b2e 0%, #065f46 40%, #b45309 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+      border-bottom: 3px solid #fbbf24;
+    }
+    .ramadhan-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    /* pola geometris islami (tanpa bintang) */
+    .islamic-border {
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 10px, transparent 10px, transparent 20px);
+    }
+    /* jarak konten agar tidak ketutupan header */
+    .main-content {
+      margin-top: 170px;
+    }
+    @media (min-width: 768px) {
+      .main-content {
+        margin-top: 150px;
+      }
+    }
+    /* header lebih tinggi sedikit agar elemen dekoratif muat */
+    header {
+      padding-top: 0.75rem !important;
+      padding-bottom: 0.75rem !important;
+    }
+    
+    /* Fix untuk gambar tadarus agar tidak terpotong di PDF */
+    .tadarus-image-container {
+      max-width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 2px solid #10b981;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+    }
+    .tadarus-image-container img {
+      max-width: 100%;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+    }
+    /* Memastikan preview PDF memiliki lebar yang cukup */
+    #preview-content {
+      width: 100%;
+      overflow-x: auto;
+    }
+    #preview-content .max-w-a4 {
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto islamic-pattern" style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%); font-family: 'Quicksand', sans-serif;">
+    
+    <!-- HEADER ELEGAN RAMADHAN TANPA BINTANG -->
+    <header class="ramadhan-header fixed top-0 left-0 right-0 z-50 py-3 shadow-2xl">
+      <!-- Pola geometris islami di background -->
+      <div class="absolute inset-0 islamic-border"></div>
+      
+      <!-- Elemen dekoratif ramadhan: bulan sabit, lentera, masjid (tanpa bintang) -->
+      <div class="absolute top-1 left-4 text-5xl opacity-30 moon-float">🌙</div>
+      <div class="absolute bottom-1 right-8 text-4xl opacity-30 lantern-swing">🏮</div>
+      <div class="absolute top-2 right-20 text-3xl opacity-20">🕌</div>
+      <div class="absolute bottom-2 left-20 text-4xl opacity-20">☪️</div>
+      <div class="absolute top-1/2 left-1/3 text-2xl opacity-10">🕋</div>
+      
+      <!-- Ornamen masjid di background -->
+      <svg class="absolute left-1/4 top-0 opacity-5" width="120" height="50" viewBox="0 0 120 50">
+        <path d="M20,50 L30,20 L40,50 M50,50 L60,20 L70,50 M80,50 L90,20 L100,50" stroke="#fbbf24" fill="none" stroke-width="2"/>
+        <circle cx="60" cy="10" r="5" stroke="#fbbf24" fill="none" stroke-width="1.5"/>
+      </svg>
+      
+      <div class="relative z-10 px-4 max-w-6xl mx-auto">
+        <!-- Baris pertama: Logo & identitas dengan nuansa ramadhan -->
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <!-- Logo dengan efek kilau bulan sabit -->
+          <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-br from-amber-500 to-yellow-600 p-3 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300 crescent-glow">
+              <div class="text-white font-black text-xl md:text-2xl" style="font-family: 'Amiri', serif;">
+                <!-- <span class="text-3xl">🌙</span> WASAN<br> -->
+                <span class="text-amber-200">MI MIFTAKHUL ATHFAL</span><br>
+                <span class="text-lg">ARROHMAN</span>
+              </div>
+            </div>
+            
+            <!-- Garis vertikal dekoratif -->
+            <div class="hidden md:block h-12 w-0.5 bg-gradient-to-b from-amber-300 to-emerald-300"></div>
+            
+            <!-- Nama madrasah dengan gaya elegan -->
+            <div class="hidden md:block">
+              <h1 class="text-white text-xl font-bold" style="font-family: 'Amiri';">MI MIFTAKHUL ATHFAL</h1>
+              <p class="text-emerald-200 text-xs flex items-center gap-1">
+                <span>📍</span> Jl.perkutut no 37, Tembok Kidul, Kec. Adiwerna
+              </p>
+            </div>
+          </div>
+          
+          <!-- Badge Ramadhan mewah dengan bulan sabit -->
+          <div class="relative group">
+            <div class="absolute inset-0 bg-amber-400/30 rounded-full blur-xl group-hover:bg-amber-400/50 transition-all"></div>
+            <div class="relative bg-gradient-to-r from-amber-600 to-yellow-500 text-white px-4 py-2 rounded-full border-2 border-amber-200 shadow-xl flex items-center gap-2">
+              <span class="text-2xl animate-pulse">🌙</span>
+              <div class="text-right">
+                <p class="text-xs font-light">RAMADHAN</p>
+                <p class="text-sm font-black tracking-wider">1447 H</p>
+              </div>
+              <span class="text-2xl animate-pulse ml-1">☪️</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Divider dekoratif dengan bulan sabit (tanpa bintang) -->
+        <div class="flex items-center justify-center gap-2 my-2">
+          <div class="h-px w-16 bg-gradient-to-r from-transparent via-amber-300 to-transparent"></div>
+          <span class="text-amber-300 text-xl moon-float">🌙</span>
+          <div class="h-px w-16 bg-gradient-to-l from-transparent via-amber-300 to-transparent"></div>
+        </div>
+        
+        <!-- Judul dan subtitle dengan gaya modern -->
+        <div class="text-center">
+          <h2 id="main-title" class="text-white text-xl md:text-2xl font-black tracking-wide drop-shadow-lg" style="font-family: 'Amiri'; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+            📋 LAPORAN KEGIATAN RAMADHAN 1447 H / 2026 M
+          </h2>
+          <p id="subtitle" class="text-amber-200 text-sm md:text-base font-semibold flex items-center justify-center gap-2 mt-1">
+            <span>✨</span> Catat Ibadahmu Setiap Hari <span>✨</span>
+          </p>
+          <!-- Tambahan elemen lentera kecil -->
+          <div class="flex justify-center gap-4 mt-1 text-xs text-emerald-200">
+            <span class="flex items-center gap-1"><span class="text-amber-300">🟢</span> SJ: Jamaah</span>
+            <span class="flex items-center gap-1"><span class="text-amber-300">🟡</span> SS: Sendiri</span>
+            <span class="flex items-center gap-1"><span class="text-amber-300">🔴</span> TS: Tidak</span>
+          </div>
+          <!-- Tambahan ornamen ketupat kecil -->
+          <div class="flex justify-center gap-3 mt-1 text-emerald-300 text-xs">
+            <span>🥟</span> <span>🌙</span> <span>🕌</span> <span>🥟</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <!-- Konten dengan jarak aman dari header (tidak ketutupan) -->
+    <main class="max-w-4xl mx-auto px-4 py-4 main-content">
+      
+      <!-- A. Data Siswa -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-2">
+          <span>👤</span> Data Siswa
+        </h2>
+        
+        <form id="student-form" class="space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-2">📝 Nama Lengkap</label>
+              <input type="text" id="input-nama" required
+                class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" placeholder="Masukkan nama lengkap">
+            </div>
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-2">📅 Tanggal</label>
+              <input type="date" id="input-tanggal" required
+                class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50">
+            </div>
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-2">🏫 Kelas</label>
+              <select id="input-kelas" required
+                class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50">
+                <option value="">-- Pilih Kelas --</option>
+                <option value="Kelas 1a">Kelas 1a</option>
+                <option value="Kelas 1b">Kelas 1b</option>
+                <option value="Kelas 2a">Kelas 2a</option>
+                <option value="Kelas 2b">Kelas 2b</option>
+                <option value="Kelas 3a">Kelas 3a</option>
+                <option value="Kelas 3b">Kelas 3b</option>
+                <option value="Kelas 4a">Kelas 4a</option>
+                <option value="Kelas 4b">Kelas 4b</option>
+                <option value="Kelas 5a">Kelas 5a</option>
+                <option value="Kelas 5b">Kelas 5b</option>
+                <option value="Kelas 6a">Kelas 6a</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-2">🌙 Ramadhan Ke</label>
+              <input type="number" id="input-ramadhan" required min="1" max="30"
+                class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" placeholder="Masukkan hari ke-">
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- B. Laporan Sholat Wajib & Tarawih -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in" style="animation-delay: 0.1s;">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-2">
+          <span>🕌</span> Laporan Sholat Wajib & Tarawih
+        </h2>
+
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
+          <p class="text-sm text-blue-800">
+            <strong>Keterangan:</strong> 
+            <span class="block mt-1">🟢 SJ = Sholat Jamaah | 🟡 SS = Sholat Sendiri | 🔴 TS = Tidak Sholat</span>
+          </p>
+        </div>
+
+        <!-- Subuh -->
+        <div class="mb-5 pb-5 border-b border-gray-200">
+          <label class="block text-emerald-700 font-semibold mb-3">🌅 Subuh</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="subuh" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+        <!-- Dzuhur -->
+        <div class="mb-5 pb-5 border-b border-gray-200">
+          <label class="block text-emerald-700 font-semibold mb-3">☀️ Dzuhur</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="dzuhur" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+        <!-- Ashar -->
+        <div class="mb-5 pb-5 border-b border-gray-200">
+          <label class="block text-emerald-700 font-semibold mb-3">🌤️ Ashar</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="ashar" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+        <!-- Maghrib -->
+        <div class="mb-5 pb-5 border-b border-gray-200">
+          <label class="block text-emerald-700 font-semibold mb-3">🌅 Maghrib</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="maghrib" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+        <!-- Isya -->
+        <div class="mb-5 pb-5 border-b border-gray-200">
+          <label class="block text-emerald-700 font-semibold mb-3">🌙 Isya</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="isya" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+        <!-- Tarawih -->
+        <div class="mb-0">
+          <label class="block text-purple-700 font-semibold mb-3">🕌 Tarawih</label>
+          <div class="flex gap-3 flex-wrap">
+            <button type="button" class="btn-option btn-sj sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SJ">🟢 SJ (Jamaah)</button>
+            <button type="button" class="btn-option btn-ss sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="SS">🟡 SS (Sendiri)</button>
+            <button type="button" class="btn-option btn-ts sholat-btn px-4 py-2 rounded-lg font-semibold" data-sholat="tarawih" data-value="TS">🔴 TS (Tidak)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- C. Makan Sahur & Puasa -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in" style="animation-delay: 0.2s;">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-8 flex items-center gap-2">
+          <span>🍽️</span> Makan Sahur & Puasa
+        </h2>
+
+        <div class="mb-8 pb-8 border-b border-gray-200">
+          <p class="text-emerald-700 font-semibold mb-4">🌅 Apakah kamu makan Sahur hari ini?</p>
+          <div class="flex gap-4">
+            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="sahur" data-value="true">✅ Ya</button>
+            <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="sahur" data-value="false">❌ Tidak</button>
+          </div>
+        </div>
+
+        <div class="mb-0">
+          <p class="text-emerald-700 font-semibold mb-4">🌙 Apakah kamu Puasa hari ini?</p>
+          <div class="flex gap-4">
+            <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="puasa" data-value="true">✅ Ya</button>
+            <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="puasa" data-value="false">❌ Tidak</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- D. Tadarus Al-Quran -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in" style="animation-delay: 0.3s;">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-8 flex items-center gap-2">
+          <span>📖</span> Tadarus Al-Quran
+        </h2>
+
+        <p class="text-emerald-700 font-semibold mb-4">Apakah hari ini kamu Tadarus Al-Quran?</p>
+        <div class="flex gap-4 mb-8">
+          <button type="button" class="btn-yn btn-ya yn-btn px-6 py-3 rounded-lg font-semibold" data-type="tadarus_alquran" data-value="true">✅ Ya</button>
+          <button type="button" class="btn-yn btn-tidak yn-btn px-6 py-3 rounded-lg font-semibold" data-type="tadarus_alquran" data-value="false">❌ Tidak</button>
+        </div>
+
+        <!-- Tadarus Details (Hidden by default) -->
+        <div id="tadarus-details" class="hidden mt-8 pt-8 border-t-2 border-emerald-200">
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
+            <p class="text-sm text-blue-800">
+              <strong>📝 Catat tadarus-mu:</strong> 
+              <span class="block mt-1">Tuliskan nama surat, dari ayat berapa sampai ayat berapa yang kamu baca hari ini, dan unggah fotonya!</span>
+            </p>
+          </div>
+
+          <div class="space-y-5 mb-6">
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-2">📕 Nama Surat</label>
+              <input type="text" id="input-nama-surat"
+                class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" 
+                placeholder="Contoh: Surah Al-Fatihah, Surah Al-Baqarah">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-emerald-700 font-semibold mb-2">📍 Dari Ayat</label>
+                <input type="number" id="input-dari-ayat" min="1"
+                  class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" 
+                  placeholder="Ayat awal">
+              </div>
+              <div>
+                <label class="block text-emerald-700 font-semibold mb-2">📍 Sampai Ayat</label>
+                <input type="number" id="input-sampai-ayat" min="1"
+                  class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" 
+                  placeholder="Ayat akhir">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-3">📷 Unggah Foto Tadarus</label>
+              <div class="border-2 border-dashed border-emerald-300 rounded-xl p-6 bg-emerald-50/30 text-center cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/50 transition-all" id="upload-area">
+                <input type="file" id="input-foto-tadarus" accept="image/*" class="hidden">
+                <div id="upload-preview" class="space-y-3">
+                  <div class="text-4xl">📸</div>
+                  <p class="text-emerald-700 font-semibold">Klik untuk unggah atau ambil foto</p>
+                  <p class="text-sm text-emerald-600">Bukti tadarus Anda</p>
+                </div>
+              </div>
+              <div id="foto-preview" class="hidden mt-4">
+                <div class="tadarus-image-container">
+                  <img id="preview-img" src="" alt="Preview Tadarus">
+                </div>
+                <button type="button" id="btn-change-foto" class="w-full mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold">
+                  🔄 Ganti Foto
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- E. Kuliah Subuh & Ashar -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in" style="animation-delay: 0.4s;">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-2">
+          <span>🎤</span> Laporan Kuliah Subuh & Ashar
+        </h2>
+
+        <div class="space-y-5">
+          <div>
+            <label class="block text-emerald-700 font-semibold mb-2">👨‍🎓 Nama Penceramah</label>
+            <input type="text" id="input-penceramah"
+              class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" placeholder="Masukkan nama penceramah">
+          </div>
+          <div>
+            <label class="block text-emerald-700 font-semibold mb-2">📍 Tempat Ceramah</label>
+            <input type="text" id="input-tempat"
+              class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50" placeholder="Masukkan tempat ceramah">
+          </div>
+          <div>
+            <label class="block text-emerald-700 font-semibold mb-2">📝 Isi/Ringkasan Ceramah</label>
+            <textarea id="input-ringkasan" rows="4"
+              class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none transition-colors bg-emerald-50/50 resize-none" placeholder="Tulis ringkasan ceramah yang kamu dengar..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- F. Tanda Tangan -->
+      <section class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 mb-6 fade-in" style="animation-delay: 0.5s;">
+        <h2 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-2">
+          <span>✍️</span> Tanda Tangan
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Orang Tua -->
+          <div>
+            <label class="block text-emerald-700 font-semibold mb-3">👨‍👩‍👧 Tanda Tangan Orang Tua</label>
+            <canvas id="canvas-orang-tua" class="canvas-container w-full" width="300" height="150"></canvas>
+            <div class="flex gap-2 mt-3">
+              <button type="button" id="btn-clear-orang-tua" class="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-semibold">🗑️ Hapus</button>
+              <button type="button" id="btn-save-orang-tua" class="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-semibold">✓ Simpan</button>
+            </div>
+          </div>
+          <!-- Murid -->
+          <div>
+            <label class="block text-emerald-700 font-semibold mb-3">👤 Tanda Tangan Murid</label>
+            <canvas id="canvas-murid" class="canvas-container w-full" width="300" height="150"></canvas>
+            <div class="flex gap-2 mt-3">
+              <button type="button" id="btn-clear-murid" class="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-semibold">🗑️ Hapus</button>
+              <button type="button" id="btn-save-murid" class="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-semibold">✓ Simpan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Button -->
+      <div class="flex gap-3 mb-8 fade-in flex-wrap" style="animation-delay: 0.6s;">
+        <!-- <button type="button" id="btn-submit"
+          class="flex-1 min-w-max py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-xl hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+          <span>💾</span> Simpan Laporan
+        </button> -->
+        <button type="button" id="btn-preview"
+          class="flex-1 min-w-max py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+          <span>👁️</span> Preview
+        </button>
+        <button type="button" id="btn-download"
+          class="flex-1 min-w-max py-4 bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold rounded-xl hover:from-purple-700 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+          <span>⬇️</span> Unduh
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Delete Modal (optional) -->
+    <div id="delete-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Hapus Laporan?</h3>
+        <p class="text-gray-600 mb-4">Laporan ini akan dihapus secara permanen.</p>
+        <div class="flex gap-3">
+          <button id="btn-cancel-delete" class="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold">Batal</button>
+          <button id="btn-confirm-delete" class="flex-1 py-2 px-4 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-semibold">Hapus</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-auto">
+      <div class="bg-white rounded-2xl w-full max-w-4xl shadow-2xl max-h-screen overflow-auto">
+        <div class="sticky top-0 bg-emerald-600 text-white p-4 flex justify-between items-center">
+          <h3 class="text-xl font-bold">📋 Preview Laporan</h3>
+          <button id="btn-close-preview" class="text-2xl leading-none hover:opacity-70">✕</button>
+        </div>
+        <div id="preview-content" class="p-8"></div>
+        <div class="sticky bottom-0 bg-gray-100 p-4 flex gap-3 justify-end border-t">
+          <button id="btn-close-preview-2" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-semibold">Tutup</button>
+          <button id="btn-download-from-preview" class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold flex items-center gap-2"><span>⬇️</span> Unduh PDF</button>
+          <button id="btn-send-to-teacher" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2"><span>📧</span> Kirim ke Guru</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send to Teacher Modal -->
+    <div id="send-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">📧 Kirim ke Guru</h3>
+        <input type="email" id="input-guru-email" placeholder="Email guru"
+          class="w-full px-4 py-2 mb-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none">
+        <input type="text" id="input-guru-name" placeholder="Nama guru"
+          class="w-full px-4 py-2 mb-4 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none">
+        <div class="flex gap-3">
+          <button id="btn-cancel-send" class="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold">Batal</button>
+          <button id="btn-send-confirm" class="flex-1 py-2 px-4 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors font-semibold">Kirim</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Message -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+      <span id="toast-message">Tersimpan!</span>
+    </div>
+
+  </div>
+
+  <script>
+    // Default Configuration
+    const defaultConfig = {
+      app_title: '📋 LAPORAN KEGIATAN RAMADHAN 1447 H / 2026 M',
+      subtitle: 'Catat Ibadahmu Setiap Hari ✨'
+    };
+
+    let config = { ...defaultConfig };
+    let allRecords = [];
+    let currentRecordData = null;
+    let recordCount = 0;
+
+    // Canvas Drawing Setup
+    let canvases = {};
+    let signatures = {
+      orang_tua: null,
+      murid: null
+    };
+
+    // Store selected values
+    let selectedSholat = {
+      subuh: null,
+      dzuhur: null,
+      ashar: null,
+      maghrib: null,
+      isya: null,
+      tarawih: null
+    };
+
+    let selectedYN = {
+      sahur: null,
+      puasa: null,
+      tadarus_alquran: null
+    };
+
+    let currentFotoTadarus = null;
+
+    // Initialize Canvas
+    function initCanvas(canvasId, storageKey) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#333';
+
+      let isDrawing = false;
+
+      canvas.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        e.preventDefault();
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+      });
+
+      canvas.addEventListener('mouseup', () => { isDrawing = false; });
+      canvas.addEventListener('mouseout', () => { isDrawing = false; });
+
+      // Touch support
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        ctx.beginPath();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      });
+
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+      });
+
+      canvas.addEventListener('touchend', () => { isDrawing = false; });
+
+      canvases[storageKey] = { canvas, ctx };
+    }
+
+    function applyConfig() {
+      const title = document.getElementById('main-title');
+      const subtitle = document.getElementById('subtitle');
+      if (title) title.textContent = config.app_title || defaultConfig.app_title;
+      if (subtitle) subtitle.textContent = config.subtitle || defaultConfig.subtitle;
+    }
+
+    // Show Toast
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      if (toast && toastMessage) {
+        toastMessage.textContent = message;
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+          toast.classList.remove('translate-y-0', 'opacity-100');
+        }, 2500);
+      }
+    }
+
+    // Format Date
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('id-ID', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+
+    // Get Sholat Status Icon
+    function getSholatIcon(value) {
+      if (value === 'SJ') return '🟢 SJ';
+      if (value === 'SS') return '🟡 SS';
+      if (value === 'TS') return '🔴 TS';
+      return '⚪ -';
+    }
+
+    // Validate Form
+    function validateForm() {
+      const nama = document.getElementById('input-nama').value.trim();
+      const tanggal = document.getElementById('input-tanggal').value;
+      const kelas = document.getElementById('input-kelas').value.trim();
+      const ramadhan = document.getElementById('input-ramadhan').value;
+
+      if (!nama || !tanggal || !kelas || !ramadhan) {
+        showToast('❌ Isi semua data siswa terlebih dahulu!');
+        return false;
+      }
+
+      const allSholatFilled = Object.values(selectedSholat).every(v => v !== null);
+      if (!allSholatFilled) {
+        showToast('❌ Pilih status sholat untuk semua waktu!');
+        return false;
+      }
+
+      const allYNFilled = Object.values(selectedYN).every(v => v !== null);
+      if (!allYNFilled) {
+        showToast('❌ Pilih jawaban untuk sahur, puasa, dan tadarus!');
+        return false;
+      }
+
+      if (selectedYN.tadarus_alquran === 'true') {
+        const namaSurat = document.getElementById('input-nama-surat').value.trim();
+        const dariAyat = document.getElementById('input-dari-ayat').value;
+        const sampaiAyat = document.getElementById('input-sampai-ayat').value;
+
+        if (!namaSurat || !dariAyat || !sampaiAyat) {
+          showToast('❌ Isi detail tadarus (surat dan ayat)!');
+          return false;
+        }
+
+        if (!currentFotoTadarus) {
+          showToast('❌ Unggah foto tadarus terlebih dahulu!');
+          return false;
+        }
+      }
+
+      if (!signatures.orang_tua || !signatures.murid) {
+        showToast('❌ Tanda tangan orang tua dan murid harus ada!');
+        return false;
+      }
+
+      return true;
+    }
+
+    // Generate Report HTML (dengan perbaikan untuk gambar tadarus)
+    function generateReportHTML(record) {
+      // Fungsi untuk menampilkan gambar tadarus dengan container yang tepat
+      const tadarusImageHTML = record.foto_tadarus ? 
+        `<div class="tadarus-image-container" style="max-width: 100%; overflow: hidden; border-radius: 12px; border: 2px solid #10b981; background-color: #f9fafb; display: flex; justify-content: center; align-items: center; padding: 8px; margin: 10px 0;">
+          <img src="${record.foto_tadarus}" alt="Foto Tadarus" style="max-width: 100%; max-height: 300px; width: auto; height: auto; object-fit: contain; border-radius: 8px; display: block; margin: 0 auto;">
+        </div>` : '';
+
+      return `
+        <div class="bg-white p-8" style="font-family: 'Quicksand', sans-serif; max-width: 210mm; margin: 0 auto;">
+          <!-- Header dengan logo teks MI MIFTAKHUL ATHFAL ARROHMAN -->
+          <div class="text-center mb-8 border-b-4 pb-6">
+            <div class="flex justify-center mb-4">
+              <div class="bg-gradient-to-br from-emerald-700 to-emerald-500 p-4 rounded-2xl shadow-lg">
+                <div class="text-white font-black text-4xl" style="font-family: 'Amiri', serif;">
+                  MI<br>MIFTAKHUL ATHFAL<br><span class="text-2xl text-amber-300">ARROHMAN</span>
+                </div>
+              </div>
+            </div>
+            <h1 class="text-3xl font-bold text-emerald-800 mb-1">MI MIFTAKHUL ATHFAL</h1>
+            <p class="text-base text-gray-700 font-semibold mb-2">Jl. Perkutut No 37, Tembok Kidul, Kec. Adiwerna</p>
+            <div class="w-16 h-1 bg-amber-400 mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold text-emerald-800">LAPORAN KEGIATAN RAMADHAN 1447H./2026M.</h2>
+            <p class="text-gray-600 mt-2">Siswa Sekolah / Pesantren</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+            <div><strong>Nama Siswa:</strong> ${record.nama_lengkap}</div>
+            <div><strong>Tanggal:</strong> ${formatDate(record.tanggal)}</div>
+            <div><strong>Kelas:</strong> ${record.kelas}</div>
+            <div><strong>Ramadhan Ke:</strong> ${record.ramadhan_ke}</div>
+          </div>
+
+          <div class="mb-8">
+            <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🕌 LAPORAN SHOLAT</h2>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div class="p-3 bg-gray-50 rounded"><strong>Subuh:</strong> ${getSholatIcon(record.subuh)}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Dzuhur:</strong> ${getSholatIcon(record.dzuhur)}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Ashar:</strong> ${getSholatIcon(record.ashar)}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Maghrib:</strong> ${getSholatIcon(record.maghrib)}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Isya:</strong> ${getSholatIcon(record.isya)}</div>
+              <div class="p-3 bg-purple-50 rounded"><strong>Tarawih:</strong> ${getSholatIcon(record.tarawih)}</div>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🍽️ PUASA & TADARUS</h2>
+            <div class="grid grid-cols-3 gap-4 text-sm">
+              <div class="p-3 bg-gray-50 rounded"><strong>Makan Sahur:</strong> ${record.makan_sahur ? '✅ Ya' : '❌ Tidak'}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Puasa:</strong> ${record.puasa ? '✅ Ya' : '❌ Tidak'}</div>
+              <div class="p-3 bg-gray-50 rounded"><strong>Tadarus:</strong> ${record.tadarus_alquran ? '✅ Ya' : '❌ Tidak'}</div>
+            </div>
+          </div>
+
+          ${record.nama_surat_tadarus ? `
+            <div class="mb-8">
+              <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">📖 DETAIL TADARUS AL-QURAN</h2>
+              <div class="bg-emerald-50 p-4 rounded-lg text-sm">
+                <div class="mb-2"><strong>Nama Surat:</strong> ${record.nama_surat_tadarus}</div>
+                <div class="mb-4"><strong>Ayat:</strong> Dari ayat ${record.dari_ayat_tadarus} sampai ayat ${record.sampai_ayat_tadarus}</div>
+                ${record.foto_tadarus ? tadarusImageHTML : ''}
+              </div>
+            </div>
+          ` : ''}
+
+          ${record.nama_penceramah || record.tempat_ceramah ? `
+            <div class="mb-8">
+              <h2 class="text-lg font-bold text-emerald-800 mb-3 border-b-2 pb-2">🎤 KULIAH SUBUH & ASHAR</h2>
+              ${record.nama_penceramah ? `<div class="mb-2 text-sm"><strong>Nama Penceramah:</strong> ${record.nama_penceramah}</div>` : ''}
+              ${record.tempat_ceramah ? `<div class="mb-2 text-sm"><strong>Tempat Ceramah:</strong> ${record.tempat_ceramah}</div>` : ''}
+              ${record.isi_ringkasan ? `<div class="mb-2 text-sm"><strong>Ringkasan Ceramah:</strong></div><div class="p-3 bg-gray-50 rounded text-sm">${record.isi_ringkasan}</div>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="mt-12">
+            <h2 class="text-lg font-bold text-emerald-800 mb-6 border-b-2 pb-2">✍️ TANDA TANGAN</h2>
+            <div class="grid grid-cols-2 gap-8">
+              <div>
+                <div class="mb-4 border-2 border-gray-300 bg-gray-50 p-3 h-32 flex items-center justify-center">
+                  ${record.ttd_orang_tua ? `<img src="${record.ttd_orang_tua}" alt="TTD Orang Tua" style="max-width: 100%; max-height: 120px; object-fit: contain;">` : '<span class="text-gray-400">Tanda Tangan</span>'}
+                </div>
+                <div class="text-center text-sm">
+                  <strong>Orang Tua</strong><br>
+                  <div class="mt-4 text-gray-600"></div>
+                  <div class="text-xs text-gray-500 mt-2">${formatDate(record.tanggal)}</div>
+                </div>
+              </div>
+              <div>
+                <div class="mb-4 border-2 border-gray-300 bg-gray-50 p-3 h-32 flex items-center justify-center">
+                  ${record.ttd_murid ? `<img src="${record.ttd_murid}" alt="TTD Murid" style="max-width: 100%; max-height: 120px; object-fit: contain;">` : '<span class="text-gray-400">Tanda Tangan</span>'}
+                </div>
+                <div class="text-center text-sm">
+                  <strong>Murid</strong><br>
+                  <div class="mt-4 text-gray-600"></div>
+                  <div class="text-xs text-gray-500 mt-2">${record.nama_lengkap}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Show Preview
+    function showPreview() {
+      if (!validateForm()) return;
+
+      const previewContent = document.getElementById('preview-content');
+      currentRecordData = {
+        nama_lengkap: document.getElementById('input-nama').value.trim(),
+        tanggal: document.getElementById('input-tanggal').value,
+        kelas: document.getElementById('input-kelas').value.trim(),
+        ramadhan_ke: document.getElementById('input-ramadhan').value,
+        subuh: selectedSholat.subuh,
+        dzuhur: selectedSholat.dzuhur,
+        ashar: selectedSholat.ashar,
+        maghrib: selectedSholat.maghrib,
+        isya: selectedSholat.isya,
+        tarawih: selectedSholat.tarawih,
+        makan_sahur: selectedYN.sahur === 'true',
+        puasa: selectedYN.puasa === 'true',
+        tadarus_alquran: selectedYN.tadarus_alquran === 'true',
+        nama_surat_tadarus: document.getElementById('input-nama-surat').value.trim(),
+        dari_ayat_tadarus: document.getElementById('input-dari-ayat').value,
+        sampai_ayat_tadarus: document.getElementById('input-sampai-ayat').value,
+        foto_tadarus: currentFotoTadarus,
+        nama_penceramah: document.getElementById('input-penceramah').value.trim(),
+        tempat_ceramah: document.getElementById('input-tempat').value.trim(),
+        isi_ringkasan: document.getElementById('input-ringkasan').value.trim(),
+        ttd_orang_tua: signatures.orang_tua,
+        ttd_murid: signatures.murid
+      };
+
+      previewContent.innerHTML = generateReportHTML(currentRecordData);
+      document.getElementById('preview-modal').classList.remove('hidden');
+    }
+
+    // Download PDF (simpan ke galeri) - dengan opsi yang lebih baik untuk gambar
+    async function downloadPDF() {
+      if (!currentRecordData) {
+        showToast('❌ Buat preview terlebih dahulu!');
+        return;
+      }
+
+      const element = document.getElementById('preview-content');
+      
+      // Opsi yang dioptimalkan untuk gambar agar tidak terpotong
+      const opt = {
+        margin: [15, 15, 15, 15], // margin atas, kanan, bawah, kiri (mm)
+        filename: `Laporan_Ramadhan_${currentRecordData.nama_lengkap}_${currentRecordData.tanggal}.pdf`,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { 
+          scale: 2,
+          logging: true,
+          allowTaint: false,
+          useCORS: true,
+          letterRendering: true,
+          scrollY: 0,
+          windowWidth: document.getElementById('preview-content').scrollWidth
+        },
+        jsPDF: { 
+          orientation: 'portrait', 
+          unit: 'mm', 
+          format: 'a4',
+          compress: true
+        },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+
+      // Tampilkan loading toast
+      showToast('⏳ Sedang memproses PDF...');
+      
+      try {
+        await html2pdf().set(opt).from(element).save();
+        showToast('✅ PDF berhasil diunduh! (simpan ke galeri)');
+      } catch (error) {
+        console.error('PDF Error:', error);
+        showToast('❌ Gagal mengunduh PDF. Coba lagi.');
+      }
+    }
+
+    // Save Canvas
+    function saveCanvasSignature(canvasId, storageKey) {
+      const canvas = canvases[storageKey];
+      if (canvas) {
+        signatures[storageKey] = canvas.canvas.toDataURL('image/png');
+        showToast('✅ Tanda tangan disimpan!');
+      }
+    }
+
+    // Clear Canvas
+    function clearCanvas(storageKey) {
+      const canvas = canvases[storageKey];
+      if (canvas) {
+        canvas.ctx.clearRect(0, 0, canvas.canvas.width, canvas.canvas.height);
+        signatures[storageKey] = null;
+      }
+    }
+
+    // Handle Tadarus Toggle
+    function handleTadarusToggle(value) {
+      const details = document.getElementById('tadarus-details');
+      if (value === 'true') {
+        details.classList.remove('hidden');
+      } else {
+        details.classList.add('hidden');
+      }
+    }
+
+    // Handle Submit (simulasi)
+    async function handleSubmit() {
+      if (!validateForm()) return;
+      // Demo mode
+      showToast('✅ (Demo) Laporan siap disimpan');
+    }
+
+    // Send to Teacher (simulasi)
+    async function sendToTeacher() {
+      if (!currentRecordData) return;
+      const guruEmail = document.getElementById('input-guru-email').value.trim();
+      const guruName = document.getElementById('input-guru-name').value.trim();
+      if (!guruEmail || !guruName) {
+        showToast('❌ Isi email dan nama guru!');
+        return;
+      }
+      showToast(`✅ Laporan dikirim ke ${guruName} (${guruEmail}) - simulasi`);
+      document.getElementById('send-modal').classList.add('hidden');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('input-tanggal');
+      if (dateInput) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+      }
+
+      initCanvas('canvas-orang-tua', 'orang_tua');
+      initCanvas('canvas-murid', 'murid');
+
+      // Sholat buttons
+      document.querySelectorAll('.sholat-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const sholat = btn.dataset.sholat;
+          const value = btn.dataset.value;
+
+          document.querySelectorAll(`.sholat-btn[data-sholat="${sholat}"]`).forEach(b => {
+            b.classList.remove('active');
+          });
+
+          btn.classList.add('active');
+          selectedSholat[sholat] = value;
+        });
+      });
+
+      // Yes/No buttons
+      document.querySelectorAll('.yn-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const type = btn.dataset.type;
+          const value = btn.dataset.value;
+
+          document.querySelectorAll(`.yn-btn[data-type="${type}"]`).forEach(b => {
+            b.classList.remove('active');
+          });
+
+          btn.classList.add('active');
+          selectedYN[type] = value;
+
+          if (type === 'tadarus_alquran') {
+            handleTadarusToggle(value);
+          }
+        });
+      });
+
+      // Photo upload
+      const uploadArea = document.getElementById('upload-area');
+      const fileInput = document.getElementById('input-foto-tadarus');
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            currentFotoTadarus = event.target.result;
+            document.getElementById('preview-img').src = currentFotoTadarus;
+            document.getElementById('upload-preview').classList.add('hidden');
+            document.getElementById('foto-preview').classList.remove('hidden');
+            showToast('✅ Foto berhasil diunggah!');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      document.getElementById('btn-change-foto').addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      // Canvas buttons
+      document.getElementById('btn-clear-orang-tua').addEventListener('click', () => clearCanvas('orang_tua'));
+      document.getElementById('btn-save-orang-tua').addEventListener('click', () => saveCanvasSignature('canvas-orang-tua', 'orang_tua'));
+      document.getElementById('btn-clear-murid').addEventListener('click', () => clearCanvas('murid'));
+      document.getElementById('btn-save-murid').addEventListener('click', () => saveCanvasSignature('canvas-murid', 'murid'));
+
+      // Main buttons
+      document.getElementById('btn-submit').addEventListener('click', handleSubmit);
+      document.getElementById('btn-preview').addEventListener('click', showPreview);
+      document.getElementById('btn-download').addEventListener('click', downloadPDF);
+
+      // Preview modal
+      const closePreviewBtns = document.querySelectorAll('#btn-close-preview, #btn-close-preview-2');
+      closePreviewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('preview-modal').classList.add('hidden');
+        });
+      });
+
+      document.getElementById('btn-download-from-preview').addEventListener('click', downloadPDF);
+      document.getElementById('btn-send-to-teacher').addEventListener('click', () => {
+        document.getElementById('preview-modal').classList.add('hidden');
+        document.getElementById('send-modal').classList.remove('hidden');
+      });
+
+      // Send modal
+      document.getElementById('btn-cancel-send').addEventListener('click', () => {
+        document.getElementById('send-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-send-confirm').addEventListener('click', sendToTeacher);
+
+      // Delete modal (dummy)
+      document.getElementById('btn-confirm-delete')?.addEventListener('click', () => {
+        document.getElementById('delete-modal').classList.add('hidden');
+        showToast('Laporan dihapus (demo)');
+      });
+      document.getElementById('btn-cancel-delete')?.addEventListener('click', () => {
+        document.getElementById('delete-modal').classList.add('hidden');
+      });
+
+      applyConfig();
+    });
+  </script>
+</body>
+</html>
